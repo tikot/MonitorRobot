@@ -1,0 +1,21 @@
+# Built application files
+*.apk
+*.ap_
+
+# Android Studio
+*.iml
+/.idea
+/.idea/workspace.xml
+/.idea/libraries
+
+# Gradle cache
+.gradle
+/build
+
+# Local configuration file
+/local.properties
+
+# System files
+.DS_Store
+
+/captures
