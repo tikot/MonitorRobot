@@ -18,9 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.SetupActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity
+            android:name=".ui.SetupActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <provider
+            android:name=".data.RobotProvider"
+            android:authorities="co.rytikov.monitorrobot"
+            android:syncable="true"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
