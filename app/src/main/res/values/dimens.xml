@@ -9,4 +9,5 @@
 
     <dimen name="setup_top_margin">110dp</dimen>
     <dimen name="app_name_size">45sp</dimen>
+    <dimen name="material_padding">16dp</dimen>
 </resources>

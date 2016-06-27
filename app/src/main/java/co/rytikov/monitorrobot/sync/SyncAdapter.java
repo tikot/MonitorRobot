@@ -3,15 +3,24 @@ package co.rytikov.monitorrobot.sync;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import co.rytikov.monitorrobot.data.RobotContract;
 import co.rytikov.monitorrobot.data.RobotContract.AccountEntry;
+import co.rytikov.monitorrobot.data.RobotContract.MonitorEntry;
 import co.rytikov.monitorrobot.endpoint.UptimeClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,11 +40,24 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     /**
      * Account Entry columns
      */
-    int MONITOR_LIMIT = 0;
-    int MONITOR_INTERVAL = 1;
-    int UP_MONITORS = 2;
-    int DOWN_MONITORS = 3;
-    int PAUSED_MONITORS = 4;
+    private static final int MONITOR_LIMIT = 0;
+    private static final int MONITOR_INTERVAL = 1;
+    private static final int UP_MONITORS = 2;
+    private static final int DOWN_MONITORS = 3;
+    private static final int PAUSED_MONITORS = 4;
+
+    /**
+     * Monitor Entry columns
+     */
+    private static final int MONITOR_ID = 0;
+    private static final int NAME = 1;
+    private static final int URL = 2;
+    private static final int TYPE = 3;
+    private static final int SUBTYPE =  4;
+    private static final int PORT = 5;
+    private static final int INTERVAL = 6;
+    private static final int STATUS = 7;
+    private static final int UP_RATIO = 8;
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -53,6 +75,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         serviceEndpoint = UptimeClient.retrofit.create(UptimeClient.UptimeRobot.class);
 
         syncAccountData();
+        startMonitorSync();
     }
 
     public void syncAccountData() {
@@ -101,4 +124,107 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             }
         });
     }
+
+    /**
+     * Send an data request
+     */
+    public void startMonitorSync() {
+        Call<UptimeClient.Monitors> call = serviceEndpoint.getMonitors(apiKey, null, "1", "1");
+        call.enqueue(new Callback<UptimeClient.Monitors>() {
+            @Override
+            public void onResponse(Call<UptimeClient.Monitors> call, Response<UptimeClient.Monitors> response) {
+                syncMonitors(response.body().getMonitors());
+            }
+            @Override
+            public void onFailure(Call<UptimeClient.Monitors> call, Throwable t) {
+                Log.i(TAG, "Sync failure message: =here" + t.fillInStackTrace());
+                Log.i(TAG, "Sync failure message: " + t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Compare entry and updated database
+     * @param monitors Monitor
+     */
+    public void syncMonitors(List<UptimeClient.Monitor> monitors) {
+
+        ArrayList<ContentProviderOperation> batch = new ArrayList<>();
+
+        HashMap<Integer, UptimeClient.Monitor> entryMap = new HashMap<>();
+        for (UptimeClient.Monitor m: monitors) {
+            entryMap.put(m.id, m);
+        }
+
+        Log.i(TAG, "Fetching local monitors entries for merge");
+        final Cursor cursor = mContentResolver.query(
+                MonitorEntry.CONTENT_URI,
+                MonitorEntry.PROJECTION,
+                null, null, null);
+        assert cursor != null;
+        Log.i(TAG, "Found " + cursor.getCount() + " local entries. Computing merge solution...");
+
+        while (cursor.moveToNext()) {
+            final int id = cursor.getInt(MONITOR_ID);
+            final String name = cursor.getString(NAME);
+            final String url = cursor.getString(URL);
+            final int interval = cursor.getInt(INTERVAL);
+            final int status = cursor.getInt(STATUS);
+            final double up_ratio = cursor.getLong(UP_RATIO);
+
+            UptimeClient.Monitor match = entryMap.get(id);
+            if (match != null) {
+                entryMap.remove(id);
+                if (!match.friendlyname.equals(name) || !match.url.equals(url) ||
+                        match.interval != interval || match.status != status ||
+                        match.alltimeuptimeratio != up_ratio
+                        ) {
+                    batch.add(ContentProviderOperation.newUpdate(MonitorEntry.buildMonitorUri(id))
+                            .withValue(MonitorEntry.COLUMN_FRIENDLY_NAME, match.friendlyname)
+                            .withValue(MonitorEntry.COLUMN_URL, match.url)
+                            .withValue(MonitorEntry.COLUMN_URL, match.url)
+                            .withValue(MonitorEntry.COLUMN_STATUS, match.status)
+                            .withValue(MonitorEntry.COLUMN_INTERVAL, match.interval)
+                            .withValue(MonitorEntry.COLUMN_ALL_TIME_UPTIME_RATIO,
+                                    match.alltimeuptimeratio)
+                            .build());
+                }
+                else {
+                    Log.i(TAG, "No action: " + id);
+                }
+            }
+            else {
+                //delete entry from database entry doesn't exists
+                batch.add(ContentProviderOperation.newDelete(
+                        MonitorEntry.buildMonitorUri(id)
+                ).build());
+            }
+        }
+        cursor.close();
+
+        for (UptimeClient.Monitor m : entryMap.values()) {
+            Log.i(TAG, "Scheduling insert: entry_id=" + m.id);
+            batch.add(ContentProviderOperation.newInsert(MonitorEntry.CONTENT_URI)
+                    .withValue(MonitorEntry.COLUMN_MONITOR_ID, m.id)
+                    .withValue(MonitorEntry.COLUMN_FRIENDLY_NAME, m.friendlyname)
+                    .withValue(MonitorEntry.COLUMN_URL, m.url)
+                    .withValue(MonitorEntry.COLUMN_TYPE, m.type)
+                    .withValue(MonitorEntry.COLUMN_SUBTYPE, m.subtype)
+                    .withValue(MonitorEntry.COLUMN_PORT, m.port)
+                    .withValue(MonitorEntry.COLUMN_INTERVAL, m.interval)
+                    .withValue(MonitorEntry.COLUMN_STATUS, m.status)
+                    .withValue(MonitorEntry.COLUMN_ALL_TIME_UPTIME_RATIO, m.alltimeuptimeratio)
+                    .build());
+        }
+
+        Log.i(TAG, "Merge solution ready. Applying batch update");
+        try {
+            mContentResolver.applyBatch(RobotContract.CONTENT_AUTHORITY, batch);
+            mContentResolver.notifyChange(MonitorEntry.CONTENT_URI, null, false);
+        } catch (RemoteException | OperationApplicationException e) {
+            Log.i(TAG, "Merge solution failed!");
+            e.printStackTrace();
+        }
+    }
+
 }

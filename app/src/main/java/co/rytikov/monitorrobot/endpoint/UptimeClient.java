@@ -32,28 +32,46 @@ public class UptimeClient {
         }
     }
 
+    public class MonitorLog {
+        public int type;
+        public String datetime;
+    }
+    public class ResponseTime {
+        public String datetime;
+        public int value;
+    }
     public class Monitor {
         public int id;
         public String friendlyname;
         public String url;
         public int type;
         public String subtype;
-        public int keywordtype;
+        public String keywordtype;
         public String keywordvalue;
-        public String httpusername;
-        public String httpPassword;
-        public int port;
+        //public String httpusername;
+        //public String httpPassword;
+        public String port;
         public int interval;
         public int status;
-        public double alltimeuptimeratio;
-        public double customuptimeratio;
+        public int alltimeuptimeratio;
+        //public double customuptimeratio;
+        public List<MonitorLog> log;
+        public List<ResponseTime> responsetime;
+    }
+
+    public class MonitorList {
+        public List<Monitor> monitor;
     }
     public class Monitors {
         public String stat;
         public int offset;
         public int limit;
         public int total;
-        public List<Monitor> monitors;
+        public MonitorList monitors;
+
+        public List<Monitor> getMonitors() {
+            return monitors.monitor;
+        }
     }
 
     public class MonitorId {
@@ -109,7 +127,6 @@ public class UptimeClient {
          * @param search String
          * @return Monitors
          */
-        //TODO break down to simpler endpoint calls
         @GET("getMonitors?format=json&noJsonCallback=1")
         Call<Monitors> getMonitors(
                 @Query("apiKey") String apiKey,
@@ -129,8 +146,14 @@ public class UptimeClient {
                 @Query("offset") String offset,
                 @Query("limit") String limit,
                 @Query("search") String search
+        );
 
-
+        @GET("getMonitors?format=json&noJsonCallback=1")
+        Call<Monitors> getMonitors(
+                @Query("apiKey") String apiKey,
+                @Query("monitors") String monitors,
+                @Query("logs") String logs,
+                @Query("responseTimes") String responseTimes
         );
 
         /**
@@ -154,7 +177,6 @@ public class UptimeClient {
                 @Query("monitorSubType") String monitorSubType,
                 @Query("monitorPort") String monitorPort,
                 @Query("monitorInterval") String monitorInterval
-
         );
 
         /**

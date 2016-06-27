@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Monitor Robot</string>
+    <string name="app_name" translatable="false">Monitor Robot</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -9,14 +9,19 @@
     <string name="nav_about">About</string>
     <string name="nav_settings">Settings</string>
 
+    <!--Setup-->
     <string name="api_key">API Key</string>
     <string name="api_required">API Key is required</string>
     <string name="api_fail">API Key is wrong</string>
     <string name="about_api_key">Downtime happens. Know what actions to take!</string>
     <string name="setup_action">continue</string>
     <string name="where">For the API key you will need an Uptime Robot account. https://uptime.com</string>
-    <string name="uptime_url">https://uptimerobot.com/</string>
+    <string name="uptime_url" translatable="false">https://uptimerobot.com/</string>
 
-    <string name="content_authority">co.rytikov.monitorrobot</string>
-    <string name="sync_account_type">monitorrobot.rytikov.co</string>
+    <string name="percent" translatable="false">%1$s %%</string>
+
+    <!--Settings-->
+    <string name="content_authority" translatable="false">co.rytikov.monitorrobot</string>
+    <string name="sync_account_type" translatable="false">monitorrobot.rytikov.co</string>
+
 </resources>

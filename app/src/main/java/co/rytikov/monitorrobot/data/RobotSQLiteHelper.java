@@ -29,7 +29,7 @@ public class RobotSQLiteHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_MONITOR_TABLE = "CREATE TABLE " +
                 MonitorEntry.TABLE_NAME + " (" +
-                MonitorEntry._ID + " INTEGER PRIMARY KEY, " +
+                MonitorEntry.COLUMN_MONITOR_ID + " INTEGER NOT NULL, " +
                 MonitorEntry.COLUMN_FRIENDLY_NAME + " TEXT NOT NULL, " +
                 MonitorEntry.COLUMN_URL + " TEXT NOT NULL, " +
                 MonitorEntry.COLUMN_TYPE + " INTEGER NOT NULL, " +

@@ -8,4 +8,11 @@
     <color name="secondaryText">#727272</color>
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="up">#4CAF50</color>
+    <color name="down">#F44336</color>
+    <color name="paused">#212121</color>
+
+
 </resources>

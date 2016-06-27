@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="72dp"
+    android:paddingEnd="?listPreferredItemPaddingRight"
+    android:paddingStart="?listPreferredItemPaddingLeft"
+    tools:theme="@style/AppTheme.NoActionBar">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/material_padding"
+        android:paddingTop="@dimen/material_padding">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:singleLine="true"
+            tools:text="Friendly Name" />
+
+        <TextView
+            android:id="@+id/url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:singleLine="true"
+            tools:text="https://127.0.0.1/" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/status"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/material_padding"
+        android:layout_marginTop="@dimen/material_padding"
+        android:scaleType="centerInside"
+        android:gravity="center"
+        android:background="@color/up">
+
+        <TextView
+            android:id="@+id/up_time_ratio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            tools:text="100%" />
+
+    </RelativeLayout>
+</RelativeLayout>
+
+
