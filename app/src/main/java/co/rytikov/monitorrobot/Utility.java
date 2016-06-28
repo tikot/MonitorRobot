@@ -7,6 +7,7 @@ public class Utility {
 
     public static String getPercent(Context context, String p) {
         String template = context.getResources().getString(R.string.percent);
+        if (p == null) p = "0";
         return String.format(template, p);
     }
 
@@ -28,6 +29,47 @@ public class Utility {
                 return ContextCompat.getColor(context, R.color.down);
             default:
                 return ContextCompat.getColor(context, R.color.paused);
+        }
+    }
+
+    /**
+     *
+     * @param name String
+     * @return String
+     */
+    public static String getTypeID(String name) {
+        switch (name) {
+            default:
+            case "HTTP(s)":
+                return "1";
+            case "Ping":
+                return "3";
+            case "Port":
+                return "4";
+        }
+    }
+
+    /**
+     *
+     * @param port String
+     * @return String
+     */
+    public static String getSubTypeID(String port) {
+        switch (port) {
+            case "80":
+                return "1";
+            case "443":
+                return "2";
+            case "21":
+                return "3";
+            case "25":
+                return "4";
+            case "110":
+                return "5";
+            case "143":
+                return "6";
+            default:
+                return "99";
         }
     }
 

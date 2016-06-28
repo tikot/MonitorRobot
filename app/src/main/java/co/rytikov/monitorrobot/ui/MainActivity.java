@@ -89,6 +89,13 @@ public class MainActivity extends TheActivity
         return !apiKey.equals("");
     }
 
+    @OnClick(R.id.fab)
+    public void fabOnClick(final View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        AddNewMonitor addMonitor = AddNewMonitor.newInstance(view, apiKey);
+        addMonitor.show(fragmentManager, "monitor");
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

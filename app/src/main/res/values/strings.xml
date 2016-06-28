@@ -24,4 +24,22 @@
     <string name="content_authority" translatable="false">co.rytikov.monitorrobot</string>
     <string name="sync_account_type" translatable="false">monitorrobot.rytikov.co</string>
 
+    <!--Dialog Monitor-->
+    <string-array name="monitor_type">
+        <item>HTTP(s)</item>
+        <item>Ping</item>
+        <item>Port</item>
+    </string-array>
+    <string name="add_monitor_title">Add New Monitor</string>
+    <string name="create_monitor">Create Monitor</string>
+    <string name="cancel">Cancel</string>
+    <string name="friendly_name">Friendly Name</string>
+    <string name="url_or_ip">URL (or IP)</string>
+    <string name="ip_or_host">IP (or Host)</string>
+    <string name="ip_or_url_or_host">IP (or URL or Host)</string>
+    <string name="port">Port</string>
+    <string name="five_minutes">5</string>
+    <string name="minutes">minutes</string>
+    <string name="title_activity_settings">Settings</string>
+
 </resources>
