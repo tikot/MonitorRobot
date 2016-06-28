@@ -12,6 +12,7 @@ public class RobotContract {
     public static final String PATH_ACCOUNT = "account";
     public static final String PATH_MONITOR = "monitor";
     public static final String PATH_LOG = "log";
+    public static final String PATH_RESPONSE_TIME = "response_time";
 
     /**
      * Account Columns
@@ -80,8 +81,65 @@ public class RobotContract {
                 COLUMN_ALL_TIME_UPTIME_RATIO
         };
 
-
         public static Uri buildMonitorUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+
+    /**
+     * LogEntry Columns
+     */
+    public static final class LogEntry implements BaseColumns {
+        public static final String TABLE_NAME = "log";
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOG).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOG;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOG;
+
+        public static final String COLUMN_MONITOR_ID = "monitor_id";
+        public static final String COLUMN_TYPE = "type";
+        public static final String COLUMN_DATE_TIME = "datetime";
+
+        public static final String[] PROJECTION = new String[] {
+                COLUMN_MONITOR_ID,
+                COLUMN_TYPE,
+                COLUMN_DATE_TIME
+        };
+
+        public static Uri buildLogUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+
+    /**
+     * Response Time Entry
+     */
+    public static final class ResponseEntry implements BaseColumns {
+        public static final String TABLE_NAME = "response";
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_RESPONSE_TIME).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY +
+                        "/" + PATH_RESPONSE_TIME;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY +
+                        "/" + PATH_RESPONSE_TIME;
+
+        public static final String COLUMN_MONITOR_ID = "monitor_id";
+        public static final String COLUMN_VALUE = "value";
+        public static final String COLUMN_DATE_TIME = "datetime";
+
+        public static final String[] PROJECTION = new String[] {
+                COLUMN_MONITOR_ID,
+                COLUMN_VALUE,
+                COLUMN_DATE_TIME
+        };
+
+        public static Uri buildResponseUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }

@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import co.rytikov.monitorrobot.data.RobotContract.AccountEntry;
 import co.rytikov.monitorrobot.data.RobotContract.MonitorEntry;
+import co.rytikov.monitorrobot.data.RobotContract.ResponseEntry;
+import co.rytikov.monitorrobot.data.RobotContract.LogEntry;
 
 public class RobotSQLiteHelper extends SQLiteOpenHelper {
 
@@ -40,14 +42,32 @@ public class RobotSQLiteHelper extends SQLiteOpenHelper {
                 MonitorEntry.COLUMN_ALL_TIME_UPTIME_RATIO + " REAL NULL" +
                 " );";
 
+        final String SQL_CREATE_MONITOR_LOG_TABLE = "CREATE TABLE " +
+                LogEntry.TABLE_NAME + " (" +
+                LogEntry.COLUMN_MONITOR_ID + " INTEGER NOT NULL, " +
+                LogEntry.COLUMN_TYPE + " INTEGER NOT NULL, " +
+                LogEntry.COLUMN_DATE_TIME + " TEXT NOT NULL" +
+                " );";
+
+        final String SQL_CREATE_RESPONSE_TABLE = "CREATE TABLE " +
+                ResponseEntry.TABLE_NAME + " (" +
+                ResponseEntry.COLUMN_MONITOR_ID + " INTEGER NOT NULL, " +
+                ResponseEntry.COLUMN_VALUE + " INTEGER NOT NULL, " +
+                ResponseEntry.COLUMN_DATE_TIME + " TEXT NOT NULL" +
+                " );";
+
         sqLiteDatabase.execSQL(SQL_CREATE_ACCOUNT_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_MONITOR_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_MONITOR_LOG_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_RESPONSE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + AccountEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MonitorEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + LogEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ResponseEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }
