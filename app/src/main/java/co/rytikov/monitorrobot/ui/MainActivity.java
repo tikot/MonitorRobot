@@ -1,13 +1,13 @@
 package co.rytikov.monitorrobot.ui;
 
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,8 +31,7 @@ public class MainActivity extends TheActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String PREF_NAME = "co.rytikov.monitorrobot";
-    private static final String PREF_API_KEY = "UPTIME_API_KEY";
+    private static final String PREF_API_KEY = "uptime_api_key";
     private static String apiKey;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -83,7 +82,7 @@ public class MainActivity extends TheActivity
         });
     }
     public boolean isInitialized() {
-        apiKey = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        apiKey = PreferenceManager.getDefaultSharedPreferences(this)
                 .getString(PREF_API_KEY, "");
 
         return !apiKey.equals("");
@@ -114,6 +113,8 @@ public class MainActivity extends TheActivity
 
         if (id == R.id.nav_about) {
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -1,9 +1,9 @@
 package co.rytikov.monitorrobot.ui;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -22,8 +22,7 @@ import retrofit2.Response;
 public class SetupActivity extends TheActivity {
 
     private static final String LOG_TAG = SetupActivity.class.getSimpleName();
-    private static final String PREF_NAME = "co.rytikov.monitorrobot";
-    private static final String PREF_API_KEY = "UPTIME_API_KEY";
+    private static final String PREF_API_KEY = "uptime_api_key";
 
     @BindView(R.id.api_key) TextView apiTextView;
     @BindString(R.string.api_required) String requiredError;
@@ -55,7 +54,7 @@ public class SetupActivity extends TheActivity {
                     return;
                 }
 
-                getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
+                PreferenceManager.getDefaultSharedPreferences(SetupActivity.this).edit()
                         .putString(PREF_API_KEY, api.toString()).commit();
 
                 UptimeClient.Account account = response.body().account;

@@ -12,6 +12,7 @@ import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -30,8 +31,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static final String TAG = SyncAdapter.class.getSimpleName();
 
-    private static final String PREF_NAME = "co.rytikov.monitorrobot";
-    private static final String PREF_API_KEY = "UPTIME_API_KEY";
+    private static final String PREF_API_KEY = "uptime_api_key";
 
     public ContentResolver mContentResolver;
     private String apiKey;
@@ -63,7 +63,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
 
         mContentResolver = context.getContentResolver();
-        apiKey = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        apiKey = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(PREF_API_KEY, "");
     }
 
@@ -74,8 +74,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         serviceEndpoint = UptimeClient.retrofit.create(UptimeClient.UptimeRobot.class);
 
-        syncAccountData();
         startMonitorSync();
+        syncAccountData();
     }
 
     public void syncAccountData() {
@@ -120,7 +120,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             @Override
             public void onFailure(Call<UptimeClient.AccountDetails> call, Throwable t) {
-                Log.i(TAG, "Sync failure message:" + t.getMessage());
+                Log.i(TAG, "Sync Account failure message:" + t.getMessage());
             }
         });
     }
@@ -137,8 +137,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             }
             @Override
             public void onFailure(Call<UptimeClient.Monitors> call, Throwable t) {
-                Log.i(TAG, "Sync failure message: =here" + t.fillInStackTrace());
-                Log.i(TAG, "Sync failure message: " + t.getMessage());
+                Log.i(TAG, "Sync Monitor failure message: " + t.getMessage());
             }
         });
     }
@@ -170,15 +169,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             final String url = cursor.getString(URL);
             final int interval = cursor.getInt(INTERVAL);
             final int status = cursor.getInt(STATUS);
-            final double up_ratio = cursor.getLong(UP_RATIO);
+            final String up_ratio = cursor.getString(UP_RATIO);
 
             UptimeClient.Monitor match = entryMap.get(id);
             if (match != null) {
                 entryMap.remove(id);
                 if (!match.friendlyname.equals(name) || !match.url.equals(url) ||
                         match.interval != interval || match.status != status ||
-                        match.alltimeuptimeratio != up_ratio
-                        ) {
+                        !match.alltimeuptimeratio.equals(up_ratio)) {
                     batch.add(ContentProviderOperation.newUpdate(MonitorEntry.buildMonitorUri(id))
                             .withValue(MonitorEntry.COLUMN_FRIENDLY_NAME, match.friendlyname)
                             .withValue(MonitorEntry.COLUMN_URL, match.url)

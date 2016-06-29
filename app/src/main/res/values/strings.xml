@@ -42,4 +42,19 @@
     <string name="minutes">minutes</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Settings -->
+    <string name="pref_default_api">-</string>
+    <string name="pref_title_api">API Key</string>
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+    </string-array>
+
 </resources>

@@ -53,7 +53,7 @@ public class UptimeClient {
         public String port;
         public int interval;
         public int status;
-        public int alltimeuptimeratio;
+        public String alltimeuptimeratio;
         //public double customuptimeratio;
         public List<MonitorLog> log;
         public List<ResponseTime> responsetime;

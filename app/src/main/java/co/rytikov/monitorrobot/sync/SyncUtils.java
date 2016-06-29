@@ -11,7 +11,6 @@ import co.rytikov.monitorrobot.accounts.AuthenticatorService;
 import co.rytikov.monitorrobot.data.RobotContract;
 
 public class SyncUtils {
-    private static final long SYNC_FREQUENCY = 60 * 60 * 3;  // 3 hour (in seconds)
     private static final String CONTENT_AUTHORITY = RobotContract.CONTENT_AUTHORITY;
     private static final String PREF_SETUP_COMPLETE = "setup_complete";
 
@@ -27,7 +26,7 @@ public class SyncUtils {
         if (accountManager.addAccountExplicitly(account, null, null)) {
             ContentResolver.setSyncAutomatically(account, CONTENT_AUTHORITY, true);
             ContentResolver.addPeriodicSync(
-                    account, CONTENT_AUTHORITY, new Bundle(),SYNC_FREQUENCY);
+                    account, CONTENT_AUTHORITY, new Bundle(), getSyncFrequency(context));
 
             newAccount = true;
         }
@@ -45,5 +44,19 @@ public class SyncUtils {
 
         ContentResolver.requestSync(AuthenticatorService.getSyncAccount(),
                 CONTENT_AUTHORITY, bundle);
+    }
+
+    public static long getSyncFrequency(Context context) {
+        String frequency = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString("sync_frequency", "180");
+        switch (frequency) {
+            case "60":
+                return 60 * 60;
+            default:
+            case "180":
+                return 60 * 60 * 3;
+            case "360":
+                return 60 * 60 * 6;
+        }
     }
 }
