@@ -32,6 +32,7 @@ public class UptimeClient {
         }
     }
 
+    //TODO date format 06/24/2016 23:07:48 returned
     public class MonitorLog {
         public int type;
         public String datetime;
@@ -79,6 +80,8 @@ public class UptimeClient {
     }
     public class CallResult {
         public String stat;
+        public String id;
+        public String message;
         public MonitorId monitor;
     }
 
@@ -154,6 +157,11 @@ public class UptimeClient {
                 @Query("monitors") String monitors,
                 @Query("logs") String logs,
                 @Query("responseTimes") String responseTimes
+        );
+
+        @GET("getMonitors?format=json&noJsonCallback=1&logs=1&responseTimes=1&responseTimesLimit=10")
+        Call<Monitors> getMonitors(
+                @Query("apiKey") String apiKey
         );
 
         /**

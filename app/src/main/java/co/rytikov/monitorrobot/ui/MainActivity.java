@@ -29,7 +29,13 @@ import co.rytikov.monitorrobot.sync.SyncUtils;
 
 public class MainActivity extends TheActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, RobotAdapter.RobotAdapterOnClick {
+
+    /**
+     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
+     * device.
+     */
+    private boolean mTwoPane;
 
     private static final String PREF_API_KEY = "uptime_api_key";
     private static String apiKey;
@@ -61,7 +67,7 @@ public class MainActivity extends TheActivity
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RobotAdapter(getBaseContext());
+        mAdapter = new RobotAdapter(getBaseContext(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(0, null, this);
@@ -80,6 +86,14 @@ public class MainActivity extends TheActivity
                 mRefreshLayout.setRefreshing(false);
             }
         });
+
+        if (findViewById(R.id.monitor_detail_container) != null) {
+            // The detail container view will be present only in the
+            // large-screen layouts (res/values-w900dp).
+            // If this view is present, then the
+            // activity should be in two-pane mode.
+            mTwoPane = true;
+        }
     }
     public boolean isInitialized() {
         apiKey = PreferenceManager.getDefaultSharedPreferences(this)
@@ -93,6 +107,28 @@ public class MainActivity extends TheActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         AddNewMonitor addMonitor = AddNewMonitor.newInstance(view, apiKey);
         addMonitor.show(fragmentManager, "monitor");
+    }
+
+    @Override
+    public void onMonitorClick(View view, long monitorID, String monitorName) {
+        if (mTwoPane) {
+            Bundle arguments = new Bundle();
+            arguments.putLong(MonitorDetailFragment.ARG_ITEM_ID, monitorID);
+            arguments.putString(MonitorDetailFragment.ARG_ITEM_NAME, monitorName);
+            arguments.putBoolean(MonitorDetailFragment.TWO_PANE, mTwoPane);
+            MonitorDetailFragment fragment = new MonitorDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.monitor_detail_container, fragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, MonitorDetailActivity.class);
+            intent.putExtra(MonitorDetailFragment.ARG_ITEM_ID, monitorID);
+            intent.putExtra(MonitorDetailFragment.ARG_ITEM_NAME, monitorName);
+            intent.putExtra(MonitorDetailFragment.TWO_PANE, mTwoPane);
+
+            startActivity(intent);
+        }
     }
 
     @Override

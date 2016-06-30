@@ -73,4 +73,33 @@ public class Utility {
         }
     }
 
+    public static String getLogType(String logType) {
+        switch (logType) {
+            case "1":
+                return "down";
+            case "2":
+                return "up";
+            case "99":
+                return "paused";
+            case "98":
+                return "started";
+            default:
+                return "error";
+        }
+    }
+
+    public static int getLogColor(Context context, String logType) {
+        switch (logType) {
+            case "1":
+                return ContextCompat.getColor(context, R.color.down);
+            case "2":
+                return ContextCompat.getColor(context, R.color.up);
+            case "99":
+                return ContextCompat.getColor(context, R.color.paused);
+            case "98":
+                return ContextCompat.getColor(context, R.color.started);
+            default:
+                return ContextCompat.getColor(context, R.color.down);
+        }
+    }
 }

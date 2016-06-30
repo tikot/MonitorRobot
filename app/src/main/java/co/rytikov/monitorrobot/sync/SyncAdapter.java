@@ -22,6 +22,8 @@ import java.util.List;
 import co.rytikov.monitorrobot.data.RobotContract;
 import co.rytikov.monitorrobot.data.RobotContract.AccountEntry;
 import co.rytikov.monitorrobot.data.RobotContract.MonitorEntry;
+import co.rytikov.monitorrobot.data.RobotContract.LogEntry;
+import co.rytikov.monitorrobot.data.RobotContract.ResponseEntry;
 import co.rytikov.monitorrobot.endpoint.UptimeClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -129,7 +131,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * Send an data request
      */
     public void startMonitorSync() {
-        Call<UptimeClient.Monitors> call = serviceEndpoint.getMonitors(apiKey, null, "1", "1");
+        Call<UptimeClient.Monitors> call = serviceEndpoint.getMonitors(apiKey);
         call.enqueue(new Callback<UptimeClient.Monitors>() {
             @Override
             public void onResponse(Call<UptimeClient.Monitors> call, Response<UptimeClient.Monitors> response) {
@@ -167,6 +169,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             final int id = cursor.getInt(MONITOR_ID);
             final String name = cursor.getString(NAME);
             final String url = cursor.getString(URL);
+            //final String type = cursor.getString(TYPE);
+            //final int sub = cursor.getInt(SUBTYPE);
+            //final int port = cursor.getInt(PORT);
             final int interval = cursor.getInt(INTERVAL);
             final int status = cursor.getInt(STATUS);
             final String up_ratio = cursor.getString(UP_RATIO);
@@ -190,11 +195,44 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 else {
                     Log.i(TAG, "No action: " + id);
                 }
-            }
+
+                if (match.log.size() != 0) {
+                    batch.add(ContentProviderOperation.newDelete(
+                            LogEntry.buildLogUri(id)
+                    ).build());
+                    for (UptimeClient.MonitorLog log : match.log) {
+                        batch.add(ContentProviderOperation.newInsert(LogEntry.buildLogUri(id))
+                                .withValue(LogEntry.COLUMN_MONITOR_ID, match.id)
+                                .withValue(LogEntry.COLUMN_DATE_TIME, log.datetime)
+                                .withValue(LogEntry.COLUMN_TYPE, log.type)
+                                .build());
+                    }
+                }
+
+                if (match.responsetime != null) {
+                    batch.add(ContentProviderOperation.newDelete(
+                            ResponseEntry.buildResponseUri(id)
+                    ).build());
+                    for (UptimeClient.ResponseTime response : match.responsetime) {
+                        batch.add(ContentProviderOperation.newInsert(
+                                ResponseEntry.buildResponseUri(id))
+                                .withValue(ResponseEntry.COLUMN_MONITOR_ID, match.id)
+                                .withValue(ResponseEntry.COLUMN_DATE_TIME, response.datetime)
+                                .withValue(ResponseEntry.COLUMN_VALUE, response.value)
+                                .build());
+                    }
+                }
+             }
             else {
                 //delete entry from database entry doesn't exists
                 batch.add(ContentProviderOperation.newDelete(
                         MonitorEntry.buildMonitorUri(id)
+                ).build());
+                batch.add(ContentProviderOperation.newDelete(
+                        LogEntry.buildLogUri(id)
+                ).build());
+                batch.add(ContentProviderOperation.newDelete(
+                        ResponseEntry.buildResponseUri(id)
                 ).build());
             }
         }

@@ -10,9 +10,11 @@
     <color name="divider">#B6B6B6</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="started">#2196F3</color>
     <color name="up">#4CAF50</color>
     <color name="down">#F44336</color>
     <color name="paused">#212121</color>
 
+    <color name="chart_dot">#ffc755</color>
 
 </resources>

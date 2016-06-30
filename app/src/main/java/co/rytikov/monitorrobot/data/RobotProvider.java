@@ -41,6 +41,7 @@ public class RobotProvider extends ContentProvider {
                         String[] selectionArgs, String sortOrder) {
         final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         Cursor cursor;
+        String id;
         switch (sUriMatcher.match(uri)) {
             case CODE_ACCOUNT:
                 cursor = db.query(
@@ -54,7 +55,7 @@ public class RobotProvider extends ContentProvider {
                         new String[] {"*"}, null, null, null, null, null);
                 break;
             case CODE_MONITOR_ID:
-                String id = uri.getLastPathSegment();
+                id = uri.getLastPathSegment();
                 cursor = db.query
                         (RobotContract.MonitorEntry.TABLE_NAME,
                         new String[] {"*"},
@@ -62,15 +63,21 @@ public class RobotProvider extends ContentProvider {
                         null, null, null, null);
                 break;
             case CODE_MONITOR_LOGS:
+                id = uri.getLastPathSegment();
                 cursor = db.query(
                         RobotContract.LogEntry.TABLE_NAME,
-                        new String[] {"*"}, null, null, null, null, null
+                        new String[] {"*"},
+                        RobotContract.LogEntry.COLUMN_MONITOR_ID + " = " + id,
+                        null, null, null, null
                 );
                 break;
             case CODE_RESPONSE_TIME:
+                id = uri.getLastPathSegment();
                 cursor = db.query(
                         RobotContract.ResponseEntry.TABLE_NAME,
-                        new String[] {"*"}, null, null, null, null, null
+                        new String[] {"*"},
+                        RobotContract.ResponseEntry.COLUMN_MONITOR_ID + " = " + id,
+                        null, null, null, null
                 );
                 break;
             default:
@@ -120,6 +127,14 @@ public class RobotProvider extends ContentProvider {
                 break ;
             case CODE_MONITOR_ID:
                 throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
+            case CODE_MONITOR_LOGS:
+                _id = db.insertOrThrow(RobotContract.LogEntry.TABLE_NAME, null, contentValues);
+                returnUri = RobotContract.LogEntry.buildLogUri(_id);
+                break;
+            case CODE_RESPONSE_TIME:
+                _id = db.insertOrThrow(RobotContract.ResponseEntry.TABLE_NAME, null, contentValues);
+                returnUri = RobotContract.ResponseEntry.buildResponseUri(_id);
+                break;
             default:
                 throw new UnsupportedOperationException("Insert unknown uri: " + uri);
         }
@@ -133,6 +148,7 @@ public class RobotProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        String id;
         int rowsDeleted;
         if ( null == selection ) selection = "1";
         switch (sUriMatcher.match(uri)) {
@@ -142,10 +158,22 @@ public class RobotProvider extends ContentProvider {
                         null, null);
                 break;
             case CODE_MONITOR_ID:
-                String id = uri.getLastPathSegment();
+                id = uri.getLastPathSegment();
                 rowsDeleted = db.delete(
                         RobotContract.MonitorEntry.TABLE_NAME,
                         RobotContract.MonitorEntry.COLUMN_MONITOR_ID + " = " + id, null);
+                break;
+            case CODE_MONITOR_LOGS:
+                id = uri.getLastPathSegment();
+                rowsDeleted = db.delete(
+                        RobotContract.LogEntry.TABLE_NAME,
+                        RobotContract.LogEntry.COLUMN_MONITOR_ID + " = " + id, null);
+                break;
+            case CODE_RESPONSE_TIME:
+                id = uri.getLastPathSegment();
+                rowsDeleted = db.delete(
+                        RobotContract.ResponseEntry.TABLE_NAME,
+                        RobotContract.ResponseEntry.COLUMN_MONITOR_ID + " = " + id, null);
                 break;
             default:
                 throw new UnsupportedOperationException("Delete unknown uri: " + uri);

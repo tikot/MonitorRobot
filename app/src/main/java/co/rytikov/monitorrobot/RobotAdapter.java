@@ -16,6 +16,7 @@ public class RobotAdapter extends RecyclerView.Adapter<RobotAdapter.ViewHolder> 
 
     private Cursor mCursor;
     private Context context;
+    private RobotAdapterOnClick mClickHandler;
 
     public static final int MONITOR_ID = 0;
     public static final int NAME = 1;
@@ -27,11 +28,16 @@ public class RobotAdapter extends RecyclerView.Adapter<RobotAdapter.ViewHolder> 
     public static final int STATUS = 7;
     public static final int UP_RATIO = 8;
 
-    public RobotAdapter(Context context) {
+    public RobotAdapter(Context context, RobotAdapterOnClick onClick) {
+        mClickHandler = onClick;
+    }
+
+    public interface RobotAdapterOnClick {
+        void onMonitorClick(View view, long monitorID, String monitorName);
     }
 
     @Override
-    public RobotAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.monitor_item, parent, false);
         context = parent.getContext();
@@ -39,7 +45,7 @@ public class RobotAdapter extends RecyclerView.Adapter<RobotAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(RobotAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
 
         String name = mCursor.getString(NAME);
@@ -70,8 +76,10 @@ public class RobotAdapter extends RecyclerView.Adapter<RobotAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener {
 
+        public final View mView;
         @BindView(R.id.name) TextView name;
         @BindView(R.id.url) TextView url;
         @BindView(R.id.up_time_ratio) TextView up_radio;
@@ -80,6 +88,15 @@ public class RobotAdapter extends RecyclerView.Adapter<RobotAdapter.ViewHolder> 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            mView = view;
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            mCursor.moveToPosition(getAdapterPosition());
+            mClickHandler.onMonitorClick(view, mCursor.getLong(MONITOR_ID),
+                    mCursor.getString(NAME));
         }
     }
 }

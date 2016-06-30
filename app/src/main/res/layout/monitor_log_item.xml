@@ -7,6 +7,8 @@
     android:minHeight="72dp"
     android:paddingEnd="?listPreferredItemPaddingRight"
     android:paddingStart="?listPreferredItemPaddingLeft"
+    android:clickable="true"
+    android:focusable="true"
     android:background="?android:attr/selectableItemBackground"
     tools:theme="@style/AppTheme.NoActionBar">
 
@@ -20,26 +22,19 @@
         android:paddingTop="@dimen/material_padding">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/log_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.AppCompat.Title"
             android:singleLine="true"
-            tools:text="Friendly Name" />
+            tools:text="06/24/2016 10:19:23" />
 
-        <TextView
-            android:id="@+id/url"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.AppCompat.Caption"
-            android:singleLine="true"
-            tools:text="https://127.0.0.1/" />
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/status"
+        android:id="@+id/log_type_color"
         android:layout_width="55dp"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="@dimen/material_padding"
@@ -49,11 +44,11 @@
         android:background="@color/up">
 
         <TextView
-            android:id="@+id/up_time_ratio"
+            android:id="@+id/log_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            tools:text="99.99%" />
+            tools:text="paused" />
 
     </RelativeLayout>
 </RelativeLayout>
