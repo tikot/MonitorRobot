@@ -27,6 +27,7 @@
         android:layout_height="@dimen/card_view"
         android:layout_margin="@dimen/material_padding"
         android:visibility="gone"
+        android:contentDescription="@string/cp_cv_respon"
         card_view:cardBackgroundColor="@color/primaryDark">
 
         <RelativeLayout

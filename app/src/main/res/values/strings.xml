@@ -60,5 +60,21 @@
         <item>180</item>
         <item>360</item>
     </string-array>
+    <string name="title_activity_about">AboutActivity</string>
+
+    <string name="about_the_app">The app is based on Uptime Robot API you can find more information about the API here http://uptimerobot.com/api. The app is third party resource for viewing you Uptime Robot account. The app is not responsible for anything. Use at your own risk.
+
+Monitor Robot app is Open Source if you found any issues you can report them at GitHub. https://github.com/tikot/MonitorRobot</string>
+
+    <string name="cd_tv_about">Information about the app</string>
+    <string name="cp_b_continue">Button continue to the app</string>
+    <string name="cd_fab_new">Create new monitor</string>
+    <string name="cp_s_type">Select type of monitor</string>
+    <string name="cp_tiet_name">Friendly name for monitor</string>
+    <string name="cp_tiet_url">Url or IP to monitor</string>
+    <string name="cp_tiet_port">Port if monitor type set to port</string>
+    <string name="cp_tiet_interval">Interval in minutes</string>
+    <string name="cp_sb_slider">Slider to select interval minutes</string>
+    <string name="cp_cv_respon">CordView showing response time chart</string>
 
 </resources>
