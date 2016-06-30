@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "914604000994",
+    "firebase_url": "https://monitor-robot-b18e7.firebaseio.com",
+    "project_id": "monitor-robot-b18e7",
+    "storage_bucket": "monitor-robot-b18e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914604000994:android:b4758ecc4f987a83",
+        "android_client_info": {
+          "package_name": "co.rytikov.monitorrobot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "914604000994-l5fbgo18lr2065q9pk81qgdthc195p4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqVHhwpwwTyG48MazLWaowZJR77y4DN4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
