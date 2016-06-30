@@ -14,4 +14,10 @@
     <dimen name="item_width">310dp</dimen>
     <dimen name="card_view">160dp</dimen>
     <dimen name="card_title">16sp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
 </resources>

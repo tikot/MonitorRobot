@@ -32,11 +32,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="co.rytikov.monitorrobot.ui.MainActivity" />
         </activity>
-
         <activity
             android:name=".ui.SetupActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -45,7 +43,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="co.rytikov.monitorrobot.ui.MainActivity" />
         </activity>
-
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about"
@@ -68,19 +65,30 @@
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-
         <service android:name=".accounts.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+
+        <receiver android:name=".MonitorsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/monitors_widget_info" />
+        </receiver>
 
     </application>
 

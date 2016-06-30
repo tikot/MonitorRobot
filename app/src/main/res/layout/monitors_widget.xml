@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/monitors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/monitors" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/up_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@string/up_monitors"/>
+
+            <TextView
+                android:id="@+id/up_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:background="@color/up"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                tools:text="3" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/down_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@string/down_monitors"/>
+
+            <TextView
+                android:id="@+id/down_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:background="@color/down"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                tools:text="1" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -77,4 +77,9 @@ Monitor Robot app is Open Source if you found any issues you can report them at 
     <string name="cp_sb_slider">Slider to select interval minutes</string>
     <string name="cp_cv_respon">CordView showing response time chart</string>
 
+    <string name="add_widget">Add widget</string>
+    <string name="down_monitors">DOWN</string>
+    <string name="up_monitors">UP</string>
+    <string name="monitors">MONITORS</string>
+
 </resources>
