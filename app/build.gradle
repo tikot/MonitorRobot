@@ -2,8 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
+    signingConfigs {
+        config {
+            storeFile file('../android.jks')
+            keyAlias 'MonitorRobotKey'
+            keyPassword 'see the r0b0t'
+            storePassword 'see the r0b0t'
+        }
+    }
     compileSdkVersion 23
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "co.rytikov.monitorrobot"
         minSdkVersion 21
@@ -15,6 +23,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        installRelease {
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            zipAlignEnabled true
         }
     }
 }
