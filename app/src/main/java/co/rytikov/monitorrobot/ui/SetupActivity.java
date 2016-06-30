@@ -9,9 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
+import co.rytikov.monitorrobot.AnalyticsApplication;
 import co.rytikov.monitorrobot.R;
 import co.rytikov.monitorrobot.endpoint.UptimeClient;
 import co.rytikov.monitorrobot.data.RobotContract.AccountEntry;
@@ -23,6 +27,7 @@ public class SetupActivity extends TheActivity {
 
     private static final String LOG_TAG = SetupActivity.class.getSimpleName();
     private static final String PREF_API_KEY = "uptime_api_key";
+    private Tracker mTracker;
 
     @BindView(R.id.api_key) TextView apiTextView;
     @BindString(R.string.api_required) String requiredError;
@@ -31,6 +36,11 @@ public class SetupActivity extends TheActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
+
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        mTracker.setScreenName("Setup");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @OnClick(R.id.next)
